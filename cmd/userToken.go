@@ -79,7 +79,8 @@ func getToken(cmd *cobra.Command, args []string) {
 		Do().UnmarshalJSON()
 
 	if err != nil {
-		fmt.Printf("Error while retrieving token %w", err)
+		fmt.Printf("Error while retrieving token %s", err)
+		return
 	}
 
 	onlyAccessToken, _ := cmd.Flags().GetBool("access-token")

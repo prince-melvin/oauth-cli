@@ -91,8 +91,8 @@ func WriteDefaultConfig() error {
 			TokenUrl:      "https://iam-client-test.us-east.philips-healthsuite.com/authorize/oauth2/token?api-version=2",
 			IssuerUrl:     "https://iam-client-test.us-east.philips-healthsuite.com/oauth2/access_token",
 			Name:          "HSDP",
-			ClientID:      "oidcclient1",
-			ClientSecret:  "1nf0M@t1cs",
+			ClientID:      "<clientId>",
+			ClientSecret:  "<clientsecret>",
 		},
 	})
 }
