@@ -80,6 +80,7 @@ func init() {
 	rootCmd.AddCommand(serviceTokenCmd)
 	serviceTokenCmd.Flags().StringP("serviceId", "s", "", "Service Id")
 	serviceTokenCmd.Flags().String("private-key-file", "", "Path to your private key")
+	serviceTokenCmd.Flags().StringP("private-key", "p", "", "private key in single line, enclose it with double quotes")
 	serviceTokenCmd.Flags().BoolP("jwt", "j", false, "get only JWT signed key")
 	serviceTokenCmd.Flags().BoolP("access-token", "a", false, "get only JWT signed key")
 	serviceTokenCmd.MarkFlagRequired("serviceId")
@@ -89,13 +90,21 @@ func init() {
 func getServiceToken(cmd *cobra.Command, args []string, cfg *pkg.Configuration) {
 	serviceId, _ := cmd.Flags().GetString("serviceId")
 	privateKeyPath, _ := cmd.Flags().GetString("private-key-file")
+	inputprivateKey, _ := cmd.Flags().GetString("private-key")
 
-	data, err := ioutil.ReadFile(privateKeyPath)
-	if err != nil {
-		fmt.Printf("Error reading private key, %v", err)
-		return
+	var privateKeyBytes []byte
+	if inputprivateKey == "" {
+		data, err := ioutil.ReadFile(privateKeyPath)
+		if err != nil {
+			fmt.Printf("Error reading private key, %v", err)
+			return
+		}
+		privateKeyBytes = data
+	} else {
+		privateKeyBytes = []byte(inputprivateKey)
 	}
-	privateKey := parsePrivateKey(data)
+
+	privateKey := parsePrivateKey(privateKeyBytes)
 	jwt, err := CreateAndSignJWT(serviceId, privateKey, cfg)
 	if err != nil {
 		fmt.Printf("Error while signing jwt token %v", err)
